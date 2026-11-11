@@ -6,5 +6,7 @@ use App\Http\Controllers\AlumnoController;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::apiResource('/alumnos', AlumnoController::class);
+Route::middleware('aut:sanctum')->group(function(){
+    Route::apiResource('/alumnos', AlumnoController::class);
+});
+    

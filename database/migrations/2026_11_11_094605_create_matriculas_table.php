@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('matriculas', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('alumno_id')->constrained('alumnos')->onDelete('cascade');
+            $table->foreignId('grupo_id')->constrained('grupos')->onDelete('cascade');
+            $table->enum('pagador_type', ['Alumno', 'Familiar']); 
+            $table->foreignId('pagador_id'); 
+            $table->date('fecha_matricula');
+            $table->enum('estado', ['Confirmada', 'Baja']);
+            $table->string('odoo_invoice_id')->nullable();
+            $table->boolean('estado_sincronizacion')->nullable();
             $table->timestamps();
         });
     }

@@ -11,7 +11,7 @@ class AlumnoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index() : JsonResponse
     {
         $alumnos = Alumno::with('usuario_id')->get();
 
@@ -26,7 +26,7 @@ class AlumnoController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
