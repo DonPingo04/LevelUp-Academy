@@ -29,8 +29,13 @@ class Matricula extends Model
         return $this->belongsTo(Grupo::class, 'grupo_id');
     }
 
-    public function familiar_pagador()
+    public function pagador()
     {
         return $this->morphTo();
+    }
+
+    public function asistencias()
+    {
+        return $this->hasMany(Asistencia::class);
     }
 }

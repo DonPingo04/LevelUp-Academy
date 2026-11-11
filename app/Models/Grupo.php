@@ -48,4 +48,9 @@ class Grupo extends Model
     {
         return $this->hasMany(Sesion::class);
     }
+
+    public function franjasHorarias() 
+    {
+        return $this->hasMany(FranjaHoraria::class);
+    }
 }

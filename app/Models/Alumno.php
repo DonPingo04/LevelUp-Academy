@@ -24,5 +24,4 @@ class Alumno extends Model
         return $this->belongsToMany(Familiar::class, 'alumno_familiar', 'alumno_id', 'familiar_id')
                     ->withPivot('parentesco', 'autoriza_acceso', 'fecha_autorizacion');
     }
-
 }
