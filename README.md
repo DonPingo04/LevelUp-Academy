@@ -34,7 +34,7 @@ Asegúrate de tener instalado en tu entorno de desarrollo:
 
 ---
 
-## 📦 Instalación y Configuración
+## Instalación y Configuración
 
 1. **Clonar el repositorio:**
    ```bash
