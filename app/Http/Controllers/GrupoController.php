@@ -62,4 +62,17 @@ class GrupoController extends Controller
     {
         //
     }
+
+    public function reasignarProfesor(Request $request, Grupo $grupo)
+    {
+        $request->validate([
+            'profesor_id' => 'required|exists:profesores,id'
+        ]);
+
+        $grupo->update(['profesor_id' => $request->profesor_id]);
+
+        return response()->json([
+            'mensaje' => 'Success'
+        ], 200);
+    }
 }
