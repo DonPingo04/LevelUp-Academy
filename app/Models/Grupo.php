@@ -29,11 +29,6 @@ class Grupo extends Model
         return $this->belongsTo(Curso::class, 'curso_id');
     }
 
-    public function nivel()
-    {
-        return $this->belongsTo(Nivel::class, 'nivel_id');
-    }
-
     public function periodo()
     {
         return $this->belongsTo(Periodo::class, 'periodo_id');
