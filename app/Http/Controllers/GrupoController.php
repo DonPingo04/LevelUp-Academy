@@ -10,9 +10,15 @@ class GrupoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $usuario = $request->user();
+
+        $grupos = match($usuario->rol)
+        {
+            'secretaria' => Grupo::all(),
+            'profesor'   => Grupo::deProfesor(),
+        };
     }
 
     /**

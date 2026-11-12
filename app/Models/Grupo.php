@@ -48,4 +48,9 @@ class Grupo extends Model
     {
         return $this->hasMany(FranjaHoraria::class);
     }
+
+    public function scopeDeProfesor($query, $profesorId)
+    {
+        return $query->where('profesor_id', $profesorId);
+    }
 }
