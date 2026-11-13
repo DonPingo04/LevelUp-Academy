@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Alumno;
 use App\Models\Usuario;
+use App\Rol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,14 +15,15 @@ class AlumnoController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Alumno::class);
+
         $user = $request->user();
 
         $alumnos = match ($user->rol)
         {
-            'secretaria' => Alumno::with('usuario')->get(),
-            'profesor'   => Alumno::with('usuario')->deProfesor($user->id)->get(),
-            'familiar'   => Alumno::with('usuario')->deFamiliar($user->id)->get(),
-            default      => abort(403)
+            Rol::Secretaria => Alumno::with('usuario')->get(),
+            Rol::Profesor   => Alumno::with('usuario')->deProfesor($user->id)->get(),
+            Rol::Familiar   => Alumno::with('usuario')->deFamiliar($user->id)->get(),
         };
 
         return response()-> json([
@@ -35,6 +37,8 @@ class AlumnoController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Alumno::class);
+
         $validated = $request->validate([
             'nombre'              => 'required|string',
             'apellidos'           => 'required|string',
@@ -66,8 +70,6 @@ class AlumnoController extends Controller
                 'fecha_nacimiento' => $validated['fecha_naciemiento'],
             ]);
         });
-
-
     }
 
     /**
@@ -75,7 +77,8 @@ class AlumnoController extends Controller
      */
     public function show(Alumno $alumno)
     {
-        
+        $this->authorize('view', $alumno);    
+
         $alumno->load('usuario');
 
         return response()->json([
@@ -89,6 +92,8 @@ class AlumnoController extends Controller
      */
     public function update(Request $request, Alumno $alumno)
     {
+        $this->authorize('update', $alumno);
+
         $validated = $request->validate([
             'nombre'              => 'required|string',
             'apellidos'           => 'required|string',
@@ -125,6 +130,8 @@ class AlumnoController extends Controller
      */
     public function destroy(Alumno $alumno)
     {
+        $this->authorize('delete', $alumno);
+
         DB::transaction(function () use ($alumno){
             $alumno->usuario->delete();
             $alumno->delete();
