@@ -10,17 +10,11 @@ class UsuarioController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
+        $this->authorize('viewAny', Usuario::class);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $user = $request->user();
     }
 
     /**
@@ -38,15 +32,7 @@ class UsuarioController extends Controller
     {
         //
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Usuario $usuario)
-    {
-        //
-    }
-
+    
     /**
      * Update the specified resource in storage.
      */

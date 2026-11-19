@@ -12,7 +12,7 @@ class CalificacionController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**

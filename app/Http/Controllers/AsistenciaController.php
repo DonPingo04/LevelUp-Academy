@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Asistencia;
+use App\Http\Requests\IndexAsistenciaRequest;
+use App\Http\Resources\AsistenciaResource;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
 class AsistenciaController extends Controller
@@ -10,17 +13,22 @@ class AsistenciaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(IndexAsistenciaRequest $request)
     {
-        //
-    }
+        Gate::authorize('viewAny', Asistencia::class);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $asistencias = Asistencia::visiblesPara($request->user())
+            ->with(['sesion', 'matricula.alumno.usuario'])
+            ->when($request->sesion_id,    fn($q, $v) => $q->where('sesion_id', $v))
+            ->when($request->matricula_id, fn($q, $v) => $q->where('matricula_id', $v))
+            ->when($request->estado,       fn($q, $v) => $q->where('estado', $v))
+            ->when($request->fecha,        fn($q, $v) => $q->whereHas(
+                'sesion',
+                fn($s) => $s->whereDate('fecha', $v)
+            ))
+            ->paginate(25);
+
+        return AsistenciaResource::collection($asistencias);
     }
 
     /**
@@ -28,7 +36,20 @@ class AsistenciaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->authorize('create', Asistencia::class);
+
+        $validatedData = $request->validate([
+            "sesion_id"     => ['required', 'integer', 'exists:sesiones,id'],
+            "matricula"     => ['required', 'integer', 'exists:matriculas,id'],
+            "estado"        => ['required', 'enum'],
+            "observacion"   => ['required', 'string', 'max:255']
+        ]);
+
+        $asistencia = Asistencia::create($validatedData);
+
+        return $request->json([
+            'data' => $asistencia
+        ], 200);
     }
 
     /**
@@ -36,15 +57,14 @@ class AsistenciaController extends Controller
      */
     public function show(Asistencia $asistencia)
     {
-        //
-    }
+        $this->authorize('view', $asistencia);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Asistencia $asistencia)
-    {
-        //
+        $asistencia->load('usuario');
+
+        return response()->json([
+            'success' => true,
+            'data'    => $asistencia
+        ], 200);
     }
 
     /**
@@ -52,7 +72,21 @@ class AsistenciaController extends Controller
      */
     public function update(Request $request, Asistencia $asistencia)
     {
-        //
+        $this->authorize('update', Asistencia::class);
+
+        $validatedData = $request->validate([
+            "sesion_id"     => ['required', 'integer', 'exists:sesiones,id'],
+            "matricula"     => ['required', 'integer', 'exists:matriculas,id'],
+            "estado"        => ['required', 'enum'],
+            "observacion"   => ['required', 'string', 'max:255']
+        ]);
+
+
+        $asistencia->update($validatedData);
+
+        return $request->json([
+            'data'  => $asistencia
+        ], 200);
     }
 
     /**
@@ -60,6 +94,8 @@ class AsistenciaController extends Controller
      */
     public function destroy(Asistencia $asistencia)
     {
-        //
+        $this->authorize('delete');
+
+        $asistencia->delete();
     }
 }

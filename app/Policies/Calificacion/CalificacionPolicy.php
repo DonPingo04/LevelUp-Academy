@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Calificacion;
 use App\Models\User;
+use App\Rol;
 use Illuminate\Auth\Access\Response;
 
 class CalificacionPolicy
@@ -13,7 +14,7 @@ class CalificacionPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->hasRole(Rol::Secretaria);
     }
 
     /**
