@@ -7,7 +7,7 @@ use App\Models\Usuario;
 use App\Rol;
 use Illuminate\Auth\Access\Response;
 
-class UuarioPolicy
+class UsuarioPolicy
 {
 
     public function before(Usuario $user, string $ability) : ?bool
