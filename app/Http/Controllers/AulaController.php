@@ -12,7 +12,9 @@ class AulaController extends Controller
      */
     public function index()
     {
-        //
+        $this->authorize('viewAll', Aula::class);
+
+        return '';
     }
 
     /**

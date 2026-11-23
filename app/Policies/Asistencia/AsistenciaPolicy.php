@@ -49,7 +49,7 @@ class AsistenciaPolicy
      */
     public function update(User $user, Asistencia $asistencia): bool
     {
-        return false;
+        return (Rol::Profesor) ? $user->grupo?->profesor_id == $user->id : false;
     }
 
     /**

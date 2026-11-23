@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('aulas', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre', 100)->require;
+            $table->enum('estado', []);
             $table->timestamps();
         });
     }
